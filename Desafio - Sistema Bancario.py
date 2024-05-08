@@ -27,11 +27,23 @@ while True:
             print("Valor inválido, digite um valor positivo.")
     
     elif opcao == 2:
-        print("Saque")
+        saque = float(input("Digite o valor a ser sacado: "))
+
+        if saldo >= saque:
+            if saque <= limite and LIMITE_SAQUES > numero_saques:
+                saldo -= saque
+                numero_saques += 1
+
+            else:
+                print("Limite de saque acima ou numero de saques diários execidos")
+
+        else:
+            print("Saldo insuficiente!")
 
     elif opcao == 3:
         print("Extrato")
         print(saldo)
+        print(numero_saques) # Teste
 
     elif opcao == 0:
         break
