@@ -22,6 +22,8 @@ while True:
         
         if deposito > 0:
             saldo += deposito
+            extrato = extrato + f"Depósito: R$ {deposito:.2f} \n" 
+            print(f"Depósito de R$ {deposito:.2f} realizado.")
 
         else:
             print("Valor inválido, digite um valor positivo.")
@@ -33,19 +35,25 @@ while True:
             if saque <= limite and LIMITE_SAQUES > numero_saques:
                 saldo -= saque
                 numero_saques += 1
+                extrato = extrato + f"Saque: R$ {saque:.2f} \n"
+                print(f"Saque de R$ {saque:.2f} realizado.")
 
             else:
-                print("Limite de saque acima ou numero de saques diários execidos")
+                print("Limite de saque acima ou numero de saques diários excedidos")
 
         else:
             print("Saldo insuficiente!")
 
     elif opcao == 3:
-        print("Extrato")
-        print(saldo)
-        print(numero_saques) # Teste
+        print("Extrato".center(21,"="))
+        if extrato != "":
+            print(extrato)
+
+        print(f"Saldo da conta: R$ {saldo: .2f}")
+        print("".center(21,"="))
 
     elif opcao == 0:
+        print("Obrigado por utilizar nosso sistema.")
         break
 
     else:
