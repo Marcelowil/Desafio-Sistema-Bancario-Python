@@ -26,7 +26,7 @@ while True:
             print(f"Depósito de R$ {deposito:.2f} realizado.")
 
         else:
-            print("Valor inválido, digite um valor positivo.")
+            print("Valor de depósito inválido, digite um valor positivo.")
     
     elif opcao == 2:
         saque = float(input("Digite o valor a ser sacado: "))
@@ -49,7 +49,7 @@ while True:
         if extrato != "":
             print(extrato)
 
-        print(f"Saldo da conta: R$ {saldo: .2f}")
+        print(f"Saldo atual da conta: R$ {saldo: .2f}")
         print("".center(21,"="))
 
     elif opcao == 0:
