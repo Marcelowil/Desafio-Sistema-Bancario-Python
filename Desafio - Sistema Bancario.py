@@ -30,7 +30,14 @@ def deposito(saldo, valor):
 
     
     return saldo, extrato
-    
+
+def exibir_extrato(saldo, /, extrato):
+    print("Extrato".center(21,"="))
+    if extrato != "":
+        print(extrato)
+
+        print(f"Saldo atual da conta: R$ {saldo: .2f}")
+    print("".center(21,"="))
 
 menu = """
 
@@ -57,8 +64,7 @@ def main():
             saldo_atualizado_dep, extrato_atualizado_dep = deposito(saldo, valor_depositado)
 
             saldo = saldo_atualizado_dep
-            extrato = extrato + extrato_atualizado_dep
-            
+            extrato = extrato + extrato_atualizado_dep            
         
         elif opcao == 2:
             saque = float(input("Digite o valor a ser sacado: "))
@@ -68,15 +74,9 @@ def main():
             saldo = saldo_atualizado
             extrato = extrato + extrato_atualizado
             numero_saques = numero_saques_atualizado
-            
 
         elif opcao == 3:
-            print("Extrato".center(21,"="))
-            if extrato != "":
-                print(extrato)
-
-            print(f"Saldo atual da conta: R$ {saldo: .2f}")
-            print("".center(21,"="))
+            exibir_extrato(saldo, extrato=extrato)
 
         elif opcao == 0:
             print("Obrigado por utilizar nosso sistema.")
