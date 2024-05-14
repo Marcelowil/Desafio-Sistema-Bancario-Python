@@ -39,11 +39,37 @@ def exibir_extrato(saldo, /, extrato):
         print(f"Saldo atual da conta: R$ {saldo: .2f}")
     print("".center(21,"="))
 
+def cadastrar_usuario(lista):
+    cpf = int(input("Digite seu CPF (somente os numeros): "))
+    cadastro_existente = filtrar_usuarios(cpf, lista)
+
+    if cadastro_existente:
+        nome = input("Informe o nome completo: ")
+        data_nasc = input("Informe a data de nascimento (dd-mm-aaaa): ")
+        endereco = input("Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
+        
+        lista_usuarios = {cpf: {"nome":nome, "data_nascimento":data_nasc, "endereco": endereco}}
+
+        return lista_usuarios
+    
+    return
+
+def filtrar_usuarios(cpf, lista):
+    for cadastro in lista:
+        if cpf in cadastro:
+            return False
+    return True
+
+
 menu = """
 
 [1] Depositar
 [2] Sacar
 [3] Extrato
+[4] Criar Usuario
+[5] Criar Conta
+[6] Listar Usuarios
+
 [0] Sair
 
 => """
@@ -54,6 +80,8 @@ def main():
     extrato = ""
     numero_saques = 0
     LIMITE_SAQUES = 3
+    usuarios = []
+    contas = []
 
     while True:
 
@@ -77,6 +105,15 @@ def main():
 
         elif opcao == 3:
             exibir_extrato(saldo, extrato=extrato)
+
+        elif opcao == 4:
+            novo_usuario = cadastrar_usuario(usuarios)
+
+            if novo_usuario != None:
+                usuarios.append(novo_usuario)
+                
+            else:
+                print("CPF já cadastrado")
 
         elif opcao == 0:
             print("Obrigado por utilizar nosso sistema.")
