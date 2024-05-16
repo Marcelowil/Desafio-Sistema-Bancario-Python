@@ -54,6 +54,22 @@ def cadastrar_usuario(lista):
     
     return
 
+def criar_conta(agencia, numero_conta, usuarios):
+    cpf = int(input("Digite seu CPF (somente os numeros): "))
+    cadastro_existente = selecionar_usuario(cpf, usuarios)
+
+    if cadastro_existente != None:
+        conta = {numero_conta:{"agencia":agencia, "usuario":cadastro_existente}}
+
+        return conta
+    
+    return
+
+def selecionar_usuario(cpf, lista):
+    for cadastro in lista:
+        if cpf in cadastro:
+            return cadastro
+
 def filtrar_usuarios(cpf, lista):
     for cadastro in lista:
         if cpf in cadastro:
@@ -82,6 +98,7 @@ def main():
     LIMITE_SAQUES = 3
     usuarios = []
     contas = []
+    AGENCIA = "0001"
 
     while True:
 
@@ -111,9 +128,20 @@ def main():
 
             if novo_usuario != None:
                 usuarios.append(novo_usuario)
-                
+                print(f"Cadastro efetuado: {novo_usuario}")
+
             else:
                 print("CPF já cadastrado")
+        
+        elif opcao == 5:
+            nova_conta = criar_conta(AGENCIA, len(contas)+1, usuarios)
+
+            if nova_conta != None:
+                contas.append(nova_conta)
+                print(f"Conta criada: {nova_conta}")
+
+            else:
+                print("Usuário inexistente, crie um novo usuário.")
 
         elif opcao == 0:
             print("Obrigado por utilizar nosso sistema.")
