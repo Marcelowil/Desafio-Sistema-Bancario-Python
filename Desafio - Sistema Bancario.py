@@ -82,7 +82,19 @@ def lista_usuarios(cpf, usuario):
     CPF: {cpf}
     Data de Nascimento: {usuario[cpf]["data_nascimento"]}
     Endereço: {usuario[cpf]["endereco"]}'''
-    print(exibir_usuarios)
+    #print(exibir_usuarios)
+    return exibir_usuarios
+
+def lista_contas(numero_conta, conta):
+    for cpf in conta[numero_conta]["usuario"]:
+       usuario = lista_usuarios(cpf, conta[numero_conta]["usuario"])
+
+    exibir_conta = f'''
+    Conta: {numero_conta:04}
+    Agencia: {conta[numero_conta]["agencia"]}
+    Usuario: {usuario}'''
+    return exibir_conta
+
 
 menu = """
 
@@ -92,7 +104,7 @@ menu = """
 [4] Criar Usuario
 [5] Criar Conta
 [6] Listar Usuarios
-[7] Lista Contas
+[7] Listar Contas
 
 [0] Sair
 
@@ -154,11 +166,12 @@ def main():
         elif opcao == 6:
             for usuario in usuarios:
                 for chave in usuario:
-                    lista_usuarios(chave, usuario)
+                    print(lista_usuarios(chave, usuario))
 
         elif opcao == 7:
             for conta in contas:
-                print(contas)
+                for chave in conta:
+                    print(lista_contas(chave, conta))
 
         elif opcao == 0:
             print("Obrigado por utilizar nosso sistema.")
