@@ -76,6 +76,13 @@ def filtrar_usuarios(cpf, lista):
             return False
     return True
 
+def lista_usuarios(cpf, usuario):
+    exibir_usuarios = f'''
+    Nome: {usuario[cpf]["nome"]}
+    CPF: {cpf}
+    Data de Nascimento: {usuario[cpf]["data_nascimento"]}
+    Endereço: {usuario[cpf]["endereco"]}'''
+    print(exibir_usuarios)
 
 menu = """
 
@@ -85,6 +92,7 @@ menu = """
 [4] Criar Usuario
 [5] Criar Conta
 [6] Listar Usuarios
+[7] Lista Contas
 
 [0] Sair
 
@@ -142,6 +150,15 @@ def main():
 
             else:
                 print("Usuário inexistente, crie um novo usuário.")
+
+        elif opcao == 6:
+            for usuario in usuarios:
+                for chave in usuario:
+                    lista_usuarios(chave, usuario)
+
+        elif opcao == 7:
+            for conta in contas:
+                print(contas)
 
         elif opcao == 0:
             print("Obrigado por utilizar nosso sistema.")
