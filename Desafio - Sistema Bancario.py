@@ -148,7 +148,7 @@ def main():
 
             if novo_usuario != None:
                 usuarios.append(novo_usuario)
-                print(f"Cadastro efetuado: {novo_usuario}")
+                print(f"Cadastro efetuado")
 
             else:
                 print("CPF já cadastrado")
@@ -158,7 +158,7 @@ def main():
 
             if nova_conta != None:
                 contas.append(nova_conta)
-                print(f"Conta criada: {nova_conta}")
+                print(f"Conta criada")
 
             else:
                 print("Usuário inexistente, crie um novo usuário.")
