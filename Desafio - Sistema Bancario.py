@@ -17,61 +17,64 @@ class Cliente(PessoaFisica):
         pass
 
 class Conta:
-    _saldo = 0
-    _AGENCIA = "0001"
-    _historico = None
-    _LIMITE = 500
-    _numero_saques = 3
-
+    def __init__(self, numero, cliente):
+        self._saldo = 0
+        self._numero = numero
+        self._AGENCIA = "0001"
+        self._cliente = cliente
+        self._historico = None
+    
     @property
     def saldo(self):
         return self._saldo
-    
-    @saldo.setter
-    def novo_saldo(self, valor, operacao):
-        if operacao == "saque":
-            self._saldo -= valor 
-        else:
-            self._saldo += valor 
     
     @property
     def limite(self):
         return self._LIMITE
     
     @property
-    def numero_saques(self):
-        return self._numero_saques
+    def agencia(self):
+        return self._AGENCIA
     
-    @numero_saques.setter
-    def atualizando_numero_saques(self):
-        self._numero_saques -= 1
-
+    @property
+    def cliente(self):
+        return self._cliente
     
-    def nova_conta(self, cliente, numero):
-        self._cliente = cliente
-        self._numero = numero
+    @property
+    def historico(self):
+        return self._historico
+    
 
+    @classmethod
+    def nova_conta(cls, cliente, numero):
+        return cls(numero, cliente)
+    
     def sacar(self, valor):
         if self.saldo >= valor and valor > 0:
-            if valor <= self.limite() and self.numero_saques() > 0:
-                self.novo_saldo(valor, "saque")
-                self.atualizando_numero_saques()
-                #extrato = f"Saque: R$ {valor:.2f} \n"     
-                return True
-            else:
-                return False
+            self.novo_saldo(valor, "saque")
+            self.atualizando_numero_saques()   
+            return True
         else:
-            print("Limite de saque acima ou numero de saques diários excedidos")
+            return False
 
     def depositar(self, valor):
         if valor > 0:
             self.saldo(valor,"depositar")
-            #extrato = f"Depósito: R$ {valor:.2f} \n" 
             return True
         
         else:
-            return "Valor de depósito inválido, digite um valor positivo."
+            return False
 
+class ContaCorrente(Conta):
+    def __init__(self, numero, cliente, limite=500, limite_saques=3):
+        super().__init__(numero, cliente)
+        self.limite = limite
+        self.limite_saques = limite_saques
+
+    def sacar(self, valor):
+        #if valor < self.limite and self.limite_saques > 0:
+            #super().atualizando_numero_saques()
+        super().sacar(valor)
 
 def exibir_extrato(saldo, /, extrato):
     print("Extrato".center(21,"="))
@@ -81,17 +84,6 @@ def exibir_extrato(saldo, /, extrato):
         print(f"Saldo atual da conta: R$ {saldo: .2f}")
     print("".center(21,"="))
 
-
-def criar_conta(agencia, numero_conta, usuarios):
-    cpf = int(input("Digite seu CPF (somente os numeros): "))
-    cadastro_existente = selecionar_usuario(cpf, usuarios)
-
-    if cadastro_existente != None:
-        conta = {numero_conta:{"agencia":agencia, "usuario":cadastro_existente}}
-
-        return conta
-    
-    return
 
 def selecionar_usuario(cpf, lista):
     for cadastro in lista:
