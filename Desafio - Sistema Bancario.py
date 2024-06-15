@@ -1,3 +1,6 @@
+from abc import ABC, abstractmethod
+from datetime import datetime
+
 class PessoaFisica:
     def __init__(self, cpf, nome, data_nascimento):
         self._cpf = cpf
@@ -22,7 +25,7 @@ class Conta:
         self._numero = numero
         self._AGENCIA = "0001"
         self._cliente = cliente
-        self._historico = None
+        self._historico = Historico()
     
     @property
     def saldo(self):
@@ -50,20 +53,28 @@ class Conta:
         return cls(numero, cliente)
     
     def sacar(self, valor):
-        if self.saldo >= valor and valor > 0:
-            self.novo_saldo(valor, "saque")
-            self.atualizando_numero_saques()   
+        if self.saldo < valor:
+            print("Operação falhou! Saldo insuficiente")
+            
+        elif valor > 0:
+            self._saldo -= valor
+            print("Saque realizando com sucesso !")
             return True
         else:
-            return False
+            print("Operação falhou! O valor informado é inválido")
+        
+        return False
 
     def depositar(self, valor):
         if valor > 0:
-            self.saldo(valor,"depositar")
-            return True
+            self._saldo += valor
+            print("Depósito realizado com sucesso!")
         
         else:
+            print("Operação falhou! O valor informado é inválido")
             return False
+        
+        return True
 
 class ContaCorrente(Conta):
     def __init__(self, numero, cliente, limite=500, limite_saques=3):
@@ -72,40 +83,42 @@ class ContaCorrente(Conta):
         self.limite_saques = limite_saques
 
     def sacar(self, valor):
-        #if valor < self.limite and self.limite_saques > 0:
-            #super().atualizando_numero_saques()
-        super().sacar(valor)
+        numero_saques = len([transacao for transacao in self.historico._transacoes if transacao["tipo"] == Saque.__name__])
 
-def exibir_extrato(saldo, /, extrato):
-    print("Extrato".center(21,"="))
-    if extrato != "":
-        print(extrato)
+        excedeu_limite = valor > self.limite
+        excedeu_saques = numero_saques >= self.limite_saques
 
-        print(f"Saldo atual da conta: R$ {saldo: .2f}")
-    print("".center(21,"="))
+        if excedeu_limite:
+            print("Operação falhou! O valor do saque excede o limite.")
 
+        elif excedeu_saques:
+            print("Operação falhou! Número máximo de saques excedidos.")
+        
+        else:
+            return super().sacar(valor)
 
-def selecionar_usuario(cpf, lista):
-    for cadastro in lista:
-        if cpf in cadastro:
-            return cadastro
+        return False
+    
+class Transacao(ABC):
+    @property
+    def valor(self):
+        pass
 
-def filtrar_usuarios(cpf, lista):
-    for cadastro in lista:
-        if cpf in cadastro:
-            return False
-    return True
+    @abstractmethod
+    def registrar(self, conta):
+        pass
 
+class Historico:
+    def __init__(self):
+        self._transacoes = []
 
-def lista_contas(numero_conta, conta):
-    for cpf in conta[numero_conta]["usuario"]:
-       usuario = lista_usuarios(cpf, conta[numero_conta]["usuario"])
+    def adicionar_transacao(self, transacao):
+        self._transacoes.append({
+            "tipo": transacao.__class__.__name__,
+            "valor": transacao.valor,
+            "data": datetime.now().strftime("%d-%m-%Y %H:%M:%s"),
+        })
 
-    exibir_conta = f'''
-    Conta: {numero_conta:04}
-    Agencia: {conta[numero_conta]["agencia"]}
-    Usuario: {usuario}'''
-    return exibir_conta
 
 
 menu = """
