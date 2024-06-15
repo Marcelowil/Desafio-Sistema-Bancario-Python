@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 from datetime import datetime
 
 class PessoaFisica:
@@ -101,6 +101,7 @@ class ContaCorrente(Conta):
     
 class Transacao(ABC):
     @property
+    @abstractproperty
     def valor(self):
         pass
 
@@ -119,90 +120,30 @@ class Historico:
             "data": datetime.now().strftime("%d-%m-%Y %H:%M:%s"),
         })
 
+class Saque(Transacao):
+    def __init__(self, valor):
+        self._valor = valor
 
+    @property
+    def valor(self):
+        return self._valor
+    
+    def registrar(self, conta):
+        sucesso_transacao = conta.sacar(self.valor)
 
-menu = """
+        if sucesso_transacao:
+            conta.historico.adicionar_transacao(self)
 
-[1] Depositar
-[2] Sacar
-[3] Extrato
-[4] Criar Usuario
-[5] Criar Conta
-[6] Listar Usuarios
-[7] Listar Contas
+class Deposito(Transacao):
+    def __init__(self, valor):
+        self._valor = valor
 
-[0] Sair
-
-=> """
-
-def main():
-    saldo = 0
-    limite = 500
-    extrato = ""
-    numero_saques = 0
-    LIMITE_SAQUES = 3
-    usuarios = []
-    contas = []
-    AGENCIA = "0001"
-
-    while True:
-
-        opcao = int(input(menu))
-
-        if opcao == 1:
-            valor_depositado = float(input("Digite o valor a ser depositado: "))
-            saldo_atualizado_dep, extrato_atualizado_dep = deposito(saldo, valor_depositado)
-
-            saldo = saldo_atualizado_dep
-            extrato = extrato + extrato_atualizado_dep            
+        @property
+        def valor(self):
+            return self._valor
         
-        elif opcao == 2:
-            saque = float(input("Digite o valor a ser sacado: "))
+        def registrar(self, conta):
+            sucesso_transacao = conta.depositar(self.valor)
 
-            saldo_atualizado, extrato_atualizado, numero_saques_atualizado = sacar(saldo=saldo, valor=saque, limite=limite, limite_saques=LIMITE_SAQUES, numero_saques=numero_saques)
-
-            saldo = saldo_atualizado
-            extrato = extrato + extrato_atualizado
-            numero_saques = numero_saques_atualizado
-
-        elif opcao == 3:
-            exibir_extrato(saldo, extrato=extrato)
-
-        elif opcao == 4:
-            novo_usuario = cadastrar_usuario(usuarios)
-
-            if novo_usuario != None:
-                usuarios.append(novo_usuario)
-                print(f"Cadastro efetuado")
-
-            else:
-                print("CPF já cadastrado")
-        
-        elif opcao == 5:
-            nova_conta = criar_conta(AGENCIA, len(contas)+1, usuarios)
-
-            if nova_conta != None:
-                contas.append(nova_conta)
-                print(f"Conta criada")
-
-            else:
-                print("Usuário inexistente, crie um novo usuário.")
-
-        elif opcao == 6:
-            for usuario in usuarios:
-                for chave in usuario:
-                    print(lista_usuarios(chave, usuario))
-
-        elif opcao == 7:
-            for conta in contas:
-                for chave in conta:
-                    print(lista_contas(chave, conta))
-
-        elif opcao == 0:
-            print("Obrigado por utilizar nosso sistema.")
-            break
-
-        else:
-            print("Operação inválida, por favor selecione novamente a operação desejada.")
-
-main()
+            if sucesso_transacao:
+                conta.historico.adicionar_transacao(self)
