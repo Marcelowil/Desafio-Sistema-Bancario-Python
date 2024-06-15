@@ -1,3 +1,22 @@
+class PessoaFisica:
+    def __init__(self, cpf, nome, data_nascimento):
+        self._cpf = cpf
+        self._nome = nome
+        self._data_nascimento = data_nascimento
+
+class Cliente(PessoaFisica):
+    def __init__(self, cpf, nome, data_nascimento, endereco, contas):
+        super().__init__(cpf, nome, data_nascimento)
+        self._endereco = endereco
+        self._contas = contas
+
+    def realizar_transacao(self):
+        pass
+
+    def adicionar_conta(self):
+        pass
+
+
 def sacar(*,saldo, valor, limite, numero_saques, limite_saques):
     extrato = ""
 
@@ -39,20 +58,6 @@ def exibir_extrato(saldo, /, extrato):
         print(f"Saldo atual da conta: R$ {saldo: .2f}")
     print("".center(21,"="))
 
-def cadastrar_usuario(lista):
-    cpf = int(input("Digite seu CPF (somente os numeros): "))
-    cadastro_existente = filtrar_usuarios(cpf, lista)
-
-    if cadastro_existente:
-        nome = input("Informe o nome completo: ")
-        data_nasc = input("Informe a data de nascimento (dd-mm-aaaa): ")
-        endereco = input("Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
-        
-        lista_usuarios = {cpf: {"nome":nome, "data_nascimento":data_nasc, "endereco": endereco}}
-
-        return lista_usuarios
-    
-    return
 
 def criar_conta(agencia, numero_conta, usuarios):
     cpf = int(input("Digite seu CPF (somente os numeros): "))
@@ -76,14 +81,6 @@ def filtrar_usuarios(cpf, lista):
             return False
     return True
 
-def lista_usuarios(cpf, usuario):
-    exibir_usuarios = f'''
-    Nome: {usuario[cpf]["nome"]}
-    CPF: {cpf}
-    Data de Nascimento: {usuario[cpf]["data_nascimento"]}
-    Endereço: {usuario[cpf]["endereco"]}'''
-    #print(exibir_usuarios)
-    return exibir_usuarios
 
 def lista_contas(numero_conta, conta):
     for cpf in conta[numero_conta]["usuario"]:
