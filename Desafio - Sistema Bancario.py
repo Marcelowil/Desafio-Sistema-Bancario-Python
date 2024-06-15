@@ -16,39 +16,62 @@ class Cliente(PessoaFisica):
     def adicionar_conta(self):
         pass
 
+class Conta:
+    _saldo = 0
+    _AGENCIA = "0001"
+    _historico = None
+    _LIMITE = 500
+    _numero_saques = 3
 
-def sacar(*,saldo, valor, limite, numero_saques, limite_saques):
-    extrato = ""
+    @property
+    def saldo(self):
+        return self._saldo
+    
+    @saldo.setter
+    def novo_saldo(self, valor, operacao):
+        if operacao == "saque":
+            self._saldo -= valor 
+        else:
+            self._saldo += valor 
+    
+    @property
+    def limite(self):
+        return self._LIMITE
+    
+    @property
+    def numero_saques(self):
+        return self._numero_saques
+    
+    @numero_saques.setter
+    def atualizando_numero_saques(self):
+        self._numero_saques -= 1
 
-    if saldo >= valor:
-            if valor <= limite and limite_saques > numero_saques:
-                saldo -= valor
-                numero_saques += 1
-                extrato = f"Saque: R$ {valor:.2f} \n"
-                print(f"Saque de R$ {valor:.2f} realizado.")
-                
+    
+    def nova_conta(self, cliente, numero):
+        self._cliente = cliente
+        self._numero = numero
+
+    def sacar(self, valor):
+        if self.saldo >= valor and valor > 0:
+            if valor <= self.limite() and self.numero_saques() > 0:
+                self.novo_saldo(valor, "saque")
+                self.atualizando_numero_saques()
+                #extrato = f"Saque: R$ {valor:.2f} \n"     
+                return True
             else:
-                print("Limite de saque acima ou numero de saques diários excedidos")
+                return False
+        else:
+            print("Limite de saque acima ou numero de saques diários excedidos")
 
-    else:
-        print("Saldo insuficiente!")
+    def depositar(self, valor):
+        if valor > 0:
+            self.saldo(valor,"depositar")
+            #extrato = f"Depósito: R$ {valor:.2f} \n" 
+            return True
+        
+        else:
+            return "Valor de depósito inválido, digite um valor positivo."
 
-    
-    return saldo, extrato, numero_saques
-
-def deposito(saldo, valor):
-    extrato = ""
-    
-    if valor > 0:
-        saldo += valor
-        extrato = f"Depósito: R$ {valor:.2f} \n" 
-        print(f"Depósito de R$ {valor:.2f} realizado.")
-
-    else:
-        print("Valor de depósito inválido, digite um valor positivo.")
-
-    
-    return saldo, extrato
 
 def exibir_extrato(saldo, /, extrato):
     print("Extrato".center(21,"="))
